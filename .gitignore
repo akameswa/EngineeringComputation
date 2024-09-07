@@ -1,1 +1,10 @@
-VS
+# Exclude files with no extension
+*
+!*.*
+!*/
+
+# Exclude .out files
+*.out
+
+# Exclude zip files
+*.zip
