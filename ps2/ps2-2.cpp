@@ -58,8 +58,8 @@ int main(void)
     int startTime = time(nullptr);
 
     for (int i = 0; i < numCards; ++i) {
-        int num1 = cards[i] / 100;
-        int num2 = cards[i] % 100;
+        int num1 = (cards[i] / 12) + 1;
+        int num2 = (cards[i] % 12) + 1;
         int correctAnswer = num1 * num2;
 
         PrintFlashcard(num1, num2);
