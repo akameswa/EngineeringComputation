@@ -7,7 +7,7 @@
 const double PI = 3.14159265;
 const int WINDOW_WIDTH = 800;
 const int WINDOW_HEIGHT = 600;
-const double GRAVITY = 9.8;
+const double GRAVITY = 98;
 const double DT = 0.025;
 
 const int CANNON_X = 50;
