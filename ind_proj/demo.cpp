@@ -88,7 +88,8 @@ void DrawTimer(double seconds)
     glColor3ub(255, 255, 255);
     char timerText[20];
     sprintf(timerText, "Time: %.1f", seconds);
-    glRasterPos2i(WINDOW_WIDTH - 150, 30);
+    int textWidth = strlen(timerText) * 16; // Assuming 16 pixels per character
+    glRasterPos2i(WINDOW_WIDTH / 2 - textWidth / 2, 30);
     YsGlDrawFontBitmap16x24(timerText);
 }
 
