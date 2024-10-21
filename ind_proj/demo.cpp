@@ -369,6 +369,55 @@ void DrawConqueredText()
     YsGlDrawFontBitmap16x24(text2);
 }
 
+void DrawSteps(int mikasa_x)
+{
+    glColor3ub(255, 255, 255);
+    glBegin(GL_LINES);
+    glVertex2i(WINDOW_WIDTH / 2, WINDOW_HEIGHT - 100);
+    glVertex2i(WINDOW_WIDTH / 2 + 100, WINDOW_HEIGHT - 200); 
+    glVertex2i(WINDOW_WIDTH / 2 + 100, WINDOW_HEIGHT - 200);
+    glVertex2i(WINDOW_WIDTH / 2 + 200, WINDOW_HEIGHT - 200); 
+    glEnd();
+
+
+    glColor3ub(0, 255, 0);
+    glBegin(GL_LINES);
+    glVertex2i(0, WINDOW_HEIGHT - 100);
+    glVertex2i(WINDOW_WIDTH / 2, WINDOW_HEIGHT - 100); 
+    glVertex2i(WINDOW_WIDTH / 2 + 200, WINDOW_HEIGHT - 200); 
+    glVertex2i(WINDOW_WIDTH, WINDOW_HEIGHT - 200); 
+    glEnd();
+}
+
+void DrawEndTower()
+{
+    glColor3ub(255, 255, 255);
+    glBegin(GL_LINE_LOOP);
+    glVertex2i(WINDOW_WIDTH / 2 + 300, WINDOW_HEIGHT - 200);
+    glVertex2i(WINDOW_WIDTH / 2 + 400, WINDOW_HEIGHT - 200);
+    glVertex2i(WINDOW_WIDTH / 2 + 400, WINDOW_HEIGHT - 300);
+    glVertex2i(WINDOW_WIDTH / 2 + 300, WINDOW_HEIGHT - 300);
+    glEnd();
+
+    glRasterPos2i(WINDOW_WIDTH / 2 + 320, WINDOW_HEIGHT - 250);
+    YsGlDrawFontBitmap16x24("END");
+
+
+    // Flagpole
+    glBegin(GL_LINES);
+    glVertex2i(WINDOW_WIDTH / 2 + 350, WINDOW_HEIGHT - 300);
+    glVertex2i(WINDOW_WIDTH / 2 + 350, WINDOW_HEIGHT - 350);
+    glEnd();
+
+    // Flag
+    glBegin(GL_TRIANGLES);
+    glVertex2i(WINDOW_WIDTH / 2 + 350, WINDOW_HEIGHT - 350);
+    glVertex2i(WINDOW_WIDTH / 2 + 380, WINDOW_HEIGHT - 330);
+    glVertex2i(WINDOW_WIDTH / 2 + 350, WINDOW_HEIGHT - 310);
+    glEnd();
+
+}
+
 #define NUM_PARTICLES 200
 
 int main()
@@ -640,8 +689,83 @@ int main()
             }
             break;
 
-        case 11: // Final state
-            // Add any final state logic here (e.g., exit, restart, etc.)
+        case 11: // Returning to the obstacle frame, moving right
+            DrawLandscape(mikasa_x);
+            DrawObstacle();
+            DrawStickFigure(mikasa_x, WINDOW_HEIGHT - 100);
+            mikasa_movement_time += elapsed_seconds;
+            mikasa_x = 50 + static_cast<int>(mikasa_movement_time * 200);
+
+            if (mikasa_x > WINDOW_WIDTH)
+            {
+                state = 12;
+                mikasa_x = 50; // Reset Mikasa's position
+                mikasa_movement_time = 0.0;
+            }
+            break;
+
+        case 12: // Climbing steps
+            DrawSteps(mikasa_x);
+            DrawEndTower();
+
+            if (mikasa_x < WINDOW_WIDTH / 2 + 100) {
+                DrawStickFigure(mikasa_x, WINDOW_HEIGHT - 100);
+                mikasa_x += 5;
+            } else if (mikasa_x < WINDOW_WIDTH / 2 + 200) {
+                int y = WINDOW_HEIGHT - 100 - (mikasa_x - (WINDOW_WIDTH / 2 + 100));
+                DrawStickFigure(mikasa_x, y);
+                mikasa_x += 5;
+            }
+            else
+            {
+                DrawStickFigure(mikasa_x, WINDOW_HEIGHT - 200); // Mikasa on top of the steps
+                if (mikasa_x < WINDOW_WIDTH / 2 + 300)
+                {
+                    mikasa_x += 5;
+                } else {
+
+                    state = 13;
+                    state_timer = 0;
+                    for (int i = 0; i < NUM_PARTICLES; ++i) {
+                        ex[i] = mikasa_x;
+                        ey[i] = WINDOW_HEIGHT - 200;
+                        evx[i] = rand() % 51 - 25;
+                        evy[i] = rand() % 51 - 25;
+                    }
+                    eState = true;
+                }
+            }
+
+            break;
+        case 13:
+            DrawSteps(mikasa_x);
+            DrawEndTower();
+            DrawStickFigure(mikasa_x, WINDOW_HEIGHT - 200);
+
+            if (eState)
+            {
+                for (int i = 0; i < NUM_PARTICLES; ++i)
+                {
+                    ex[i] += evx[i];
+                    ey[i] += evy[i];
+                }
+                ++eStep;
+                if (100 < eStep)
+                {
+                    eState = false;
+                   break; // Game ends here
+                }
+            }
+
+            glColor3f(1, 0, 0);
+            glPointSize(2);
+            glBegin(GL_POINTS);
+            for (int i = 0; i < NUM_PARTICLES; ++i)
+            {
+                glVertex2i(ex[i], ey[i]);
+            }
+            glEnd();
+
             break;
 
         default:
