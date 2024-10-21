@@ -131,180 +131,180 @@ void DrawObstacleText()
 
 void DrawSpaceShip(int x,int y)
 {
-	glColor3ub(255,255,255);  
-	glBegin(GL_LINE_STRIP);
-	glVertex2i(x+-3,y+-15);
-	glVertex2i(x+-7,y+12);
-	glVertex2i(x+-7,y+43);
-	glVertex2i(x+-2,y+46);
-	glVertex2i(x+0,y+42);
-	glVertex2i(x+8,y+42);
-	glVertex2i(x+11,y+46);
-	glVertex2i(x+14,y+42);
-	glVertex2i(x+14,y+8);
-	glVertex2i(x+11,y+-15);
-	glVertex2i(x+8,y+-2);
-	glVertex2i(x+-1,y+-2);
-	glVertex2i(x+-3,y+-15);
-	glEnd();
-	glBegin(GL_LINE_STRIP);
-	glVertex2i(x+-7,y+19);
-	glVertex2i(x+-19,y+24);
-	glVertex2i(x+-18,y+41);
-	glVertex2i(x+-7,y+41);
-	glEnd();
-	glBegin(GL_LINE_STRIP);
-	glVertex2i(x+14,y+18);
-	glVertex2i(x+24,y+22);
-	glVertex2i(x+24,y+39);
-	glVertex2i(x+14,y+39);
-	glEnd();
-	glBegin(GL_LINE_STRIP);
-	glVertex2i(x+-4,y+25);
-	glVertex2i(x+-4,y+39);
-	glEnd();
-	glBegin(GL_LINE_STRIP);
-	glVertex2i(x+10,y+25);
-	glVertex2i(x+10,y+37);
-	glEnd();
-	glBegin(GL_LINE_STRIP);
-	glVertex2i(x+0,y+3);
-	glVertex2i(x+-1,y+12);
-	glVertex2i(x+0,y+19);
-	glVertex2i(x+2,y+21);
-	glVertex2i(x+5,y+21);
-	glVertex2i(x+7,y+18);
-	glVertex2i(x+8,y+11);
-	glVertex2i(x+6,y+3);
-	glVertex2i(x+4,y+1);
-	glVertex2i(x+2,y+1);
-	glVertex2i(x+0,y+3);
-	glEnd();
-	glBegin(GL_LINE_STRIP);
-	glVertex2i(x+-1,y+12);
-	glVertex2i(x+1,y+15);
-	glVertex2i(x+4,y+15);
-	glVertex2i(x+7,y+13);
-	glEnd();
-	glBegin(GL_LINE_STRIP);
-	glVertex2i(x+-15,y+22);
-	glVertex2i(x+-15,y+17);
-	glVertex2i(x+-14,y+22);
-	glEnd();
-	glBegin(GL_LINE_STRIP);
-	glVertex2i(x+18,y+19);
-	glVertex2i(x+19,y+15);
-	glVertex2i(x+20,y+20);
-	glEnd();
+    glColor3ub(255,255,255);  
+    glBegin(GL_LINE_STRIP);
+    glVertex2i(x+-3,y+-15);
+    glVertex2i(x+-7,y+12);
+    glVertex2i(x+-7,y+43);
+    glVertex2i(x+-2,y+46);
+    glVertex2i(x+0,y+42);
+    glVertex2i(x+8,y+42);
+    glVertex2i(x+11,y+46);
+    glVertex2i(x+14,y+42);
+    glVertex2i(x+14,y+8);
+    glVertex2i(x+11,y+-15);
+    glVertex2i(x+8,y+-2);
+    glVertex2i(x+-1,y+-2);
+    glVertex2i(x+-3,y+-15);
+    glEnd();
+    glBegin(GL_LINE_STRIP);
+    glVertex2i(x+-7,y+19);
+    glVertex2i(x+-19,y+24);
+    glVertex2i(x+-18,y+41);
+    glVertex2i(x+-7,y+41);
+    glEnd();
+    glBegin(GL_LINE_STRIP);
+    glVertex2i(x+14,y+18);
+    glVertex2i(x+24,y+22);
+    glVertex2i(x+24,y+39);
+    glVertex2i(x+14,y+39);
+    glEnd();
+    glBegin(GL_LINE_STRIP);
+    glVertex2i(x+-4,y+25);
+    glVertex2i(x+-4,y+39);
+    glEnd();
+    glBegin(GL_LINE_STRIP);
+    glVertex2i(x+10,y+25);
+    glVertex2i(x+10,y+37);
+    glEnd();
+    glBegin(GL_LINE_STRIP);
+    glVertex2i(x+0,y+3);
+    glVertex2i(x+-1,y+12);
+    glVertex2i(x+0,y+19);
+    glVertex2i(x+2,y+21);
+    glVertex2i(x+5,y+21);
+    glVertex2i(x+7,y+18);
+    glVertex2i(x+8,y+11);
+    glVertex2i(x+6,y+3);
+    glVertex2i(x+4,y+1);
+    glVertex2i(x+2,y+1);
+    glVertex2i(x+0,y+3);
+    glEnd();
+    glBegin(GL_LINE_STRIP);
+    glVertex2i(x+-1,y+12);
+    glVertex2i(x+1,y+15);
+    glVertex2i(x+4,y+15);
+    glVertex2i(x+7,y+13);
+    glEnd();
+    glBegin(GL_LINE_STRIP);
+    glVertex2i(x+-15,y+22);
+    glVertex2i(x+-15,y+17);
+    glVertex2i(x+-14,y+22);
+    glEnd();
+    glBegin(GL_LINE_STRIP);
+    glVertex2i(x+18,y+19);
+    glVertex2i(x+19,y+15);
+    glVertex2i(x+20,y+20);
+    glEnd();
 }
 
 void DrawMissile(int x,int y)
 {
-	glColor3ub(255,255,255);  
-	glBegin(GL_LINE_STRIP);
-	glVertex2i(x+11,y+-9);
-	glVertex2i(x+10,y+19);
-	glVertex2i(x+20,y+19);
-	glVertex2i(x+20,y+-9);
-	glVertex2i(x+17,y+-16);
-	glVertex2i(x+15,y+-17);
-	glVertex2i(x+13,y+-16);
-	glVertex2i(x+11,y+-9);
-	glEnd();
-	glBegin(GL_LINE_STRIP);
-	glVertex2i(x+11,y+-7);
-	glVertex2i(x+6,y+-6);
-	glVertex2i(x+6,y+-4);
-	glVertex2i(x+10,y+-4);
-	glEnd();
-	glBegin(GL_LINE_STRIP);
-	glVertex2i(x+20,y+-8);
-	glVertex2i(x+23,y+-7);
-	glVertex2i(x+24,y+-4);
-	glVertex2i(x+20,y+-4);
-	glEnd();
-	glBegin(GL_LINE_STRIP);
-	glVertex2i(x+10,y+9);
-	glVertex2i(x+6,y+12);
-	glVertex2i(x+6,y+16);
-	glVertex2i(x+10,y+18);
-	glEnd();
-	glBegin(GL_LINE_STRIP);
-	glVertex2i(x+20,y+9);
-	glVertex2i(x+25,y+10);
-	glVertex2i(x+25,y+16);
-	glVertex2i(x+20,y+18);
-	glEnd();
-	glBegin(GL_LINE_STRIP);
-	glVertex2i(x+15,y+9);
-	glVertex2i(x+15,y+16);
-	glEnd();
-	glBegin(GL_LINE_STRIP);
-	glVertex2i(x+15,y+-8);
-	glVertex2i(x+15,y+-5);
-	glEnd();
-	glColor3ub(255,0,0);  
-	glBegin(GL_LINE_STRIP);
-	glVertex2i(x+10,y+19);
-	glVertex2i(x+11,y+29);
-	glVertex2i(x+14,y+27);
-	glVertex2i(x+16,y+29);
-	glVertex2i(x+18,y+26);
-	glVertex2i(x+20,y+28);
-	glVertex2i(x+20,y+20);
-	glEnd();
+    glColor3ub(255,255,255);  
+    glBegin(GL_LINE_STRIP);
+    glVertex2i(x+11,y+-9);
+    glVertex2i(x+10,y+19);
+    glVertex2i(x+20,y+19);
+    glVertex2i(x+20,y+-9);
+    glVertex2i(x+17,y+-16);
+    glVertex2i(x+15,y+-17);
+    glVertex2i(x+13,y+-16);
+    glVertex2i(x+11,y+-9);
+    glEnd();
+    glBegin(GL_LINE_STRIP);
+    glVertex2i(x+11,y+-7);
+    glVertex2i(x+6,y+-6);
+    glVertex2i(x+6,y+-4);
+    glVertex2i(x+10,y+-4);
+    glEnd();
+    glBegin(GL_LINE_STRIP);
+    glVertex2i(x+20,y+-8);
+    glVertex2i(x+23,y+-7);
+    glVertex2i(x+24,y+-4);
+    glVertex2i(x+20,y+-4);
+    glEnd();
+    glBegin(GL_LINE_STRIP);
+    glVertex2i(x+10,y+9);
+    glVertex2i(x+6,y+12);
+    glVertex2i(x+6,y+16);
+    glVertex2i(x+10,y+18);
+    glEnd();
+    glBegin(GL_LINE_STRIP);
+    glVertex2i(x+20,y+9);
+    glVertex2i(x+25,y+10);
+    glVertex2i(x+25,y+16);
+    glVertex2i(x+20,y+18);
+    glEnd();
+    glBegin(GL_LINE_STRIP);
+    glVertex2i(x+15,y+9);
+    glVertex2i(x+15,y+16);
+    glEnd();
+    glBegin(GL_LINE_STRIP);
+    glVertex2i(x+15,y+-8);
+    glVertex2i(x+15,y+-5);
+    glEnd();
+    glColor3ub(255,0,0);  
+    glBegin(GL_LINE_STRIP);
+    glVertex2i(x+10,y+19);
+    glVertex2i(x+11,y+29);
+    glVertex2i(x+14,y+27);
+    glVertex2i(x+16,y+29);
+    glVertex2i(x+18,y+26);
+    glVertex2i(x+20,y+28);
+    glVertex2i(x+20,y+20);
+    glEnd();
 }
 
 void DrawUFO(int x,int y)
 {
-	glColor3ub(255,255,255);  
-	glBegin(GL_LINE_STRIP);
-	glVertex2i(x+-9,y+-8);
-	glVertex2i(x+8,y+-20);
-	glVertex2i(x+25,y+-10);
-	glVertex2i(x+-9,y+-8);
-	glVertex2i(x+-8,y+5);
-	glVertex2i(x+25,y+3);
-	glVertex2i(x+24,y+-11);
-	glEnd();
-	glBegin(GL_LINE_STRIP);
-	glVertex2i(x+5,y+-7);
-	glVertex2i(x+2,y+-5);
-	glVertex2i(x+2,y+0);
-	glVertex2i(x+7,y+1);
-	glVertex2i(x+11,y+-1);
-	glVertex2i(x+11,y+-5);
-	glVertex2i(x+8,y+-7);
-	glVertex2i(x+5,y+-7);
-	glEnd();
-	glBegin(GL_LINE_STRIP);
-	glVertex2i(x+-8,y+4);
-	glVertex2i(x+-19,y+12);
-	glVertex2i(x+-4,y+17);
-	glVertex2i(x+8,y+17);
-	glVertex2i(x+25,y+13);
-	glVertex2i(x+38,y+6);
-	glVertex2i(x+24,y+3);
-	glEnd();
-	glBegin(GL_LINE_STRIP);
-	glVertex2i(x+0,y+17);
-	glVertex2i(x+2,y+24);
-	glVertex2i(x+9,y+25);
-	glVertex2i(x+18,y+23);
-	glVertex2i(x+20,y+15);
-	glEnd();
-	glBegin(GL_LINE_STRIP);
-	glVertex2i(x+-15,y+14);
-	glVertex2i(x+-14,y+20);
-	glVertex2i(x+-7,y+23);
-	glVertex2i(x+0,y+20);
-	glEnd();
-	glBegin(GL_LINE_STRIP);
-	glVertex2i(x+35,y+8);
-	glVertex2i(x+33,y+17);
-	glVertex2i(x+27,y+21);
-	glVertex2i(x+20,y+20);
-	glEnd();
+    glColor3ub(255,255,255);  
+    glBegin(GL_LINE_STRIP);
+    glVertex2i(x+-9,y+-8);
+    glVertex2i(x+8,y+-20);
+    glVertex2i(x+25,y+-10);
+    glVertex2i(x+-9,y+-8);
+    glVertex2i(x+-8,y+5);
+    glVertex2i(x+25,y+3);
+    glVertex2i(x+24,y+-11);
+    glEnd();
+    glBegin(GL_LINE_STRIP);
+    glVertex2i(x+5,y+-7);
+    glVertex2i(x+2,y+-5);
+    glVertex2i(x+2,y+0);
+    glVertex2i(x+7,y+1);
+    glVertex2i(x+11,y+-1);
+    glVertex2i(x+11,y+-5);
+    glVertex2i(x+8,y+-7);
+    glVertex2i(x+5,y+-7);
+    glEnd();
+    glBegin(GL_LINE_STRIP);
+    glVertex2i(x+-8,y+4);
+    glVertex2i(x+-19,y+12);
+    glVertex2i(x+-4,y+17);
+    glVertex2i(x+8,y+17);
+    glVertex2i(x+25,y+13);
+    glVertex2i(x+38,y+6);
+    glVertex2i(x+24,y+3);
+    glEnd();
+    glBegin(GL_LINE_STRIP);
+    glVertex2i(x+0,y+17);
+    glVertex2i(x+2,y+24);
+    glVertex2i(x+9,y+25);
+    glVertex2i(x+18,y+23);
+    glVertex2i(x+20,y+15);
+    glEnd();
+    glBegin(GL_LINE_STRIP);
+    glVertex2i(x+-15,y+14);
+    glVertex2i(x+-14,y+20);
+    glVertex2i(x+-7,y+23);
+    glVertex2i(x+0,y+20);
+    glEnd();
+    glBegin(GL_LINE_STRIP);
+    glVertex2i(x+35,y+8);
+    glVertex2i(x+33,y+17);
+    glVertex2i(x+27,y+21);
+    glVertex2i(x+20,y+20);
+    glEnd();
 }
 
 bool CheckCollision(int mx, int my, int tx, int ty)
@@ -379,9 +379,6 @@ int main()
     int state = 0;
     clock_t start_time = clock();
     int mikasa_x = 50;
-    bool obstacle_visible = false;
-    bool text_visible = false;
-    bool speech_bubble_visible = false;
     double total_elapsed_seconds = 0.0;
     double mikasa_movement_time = 0.0;
     double state_timer = 0.0;
@@ -432,13 +429,25 @@ int main()
         case 0: // Title
             DrawTitle("Journey of Mikasa");
             DrawStickFigure(WINDOW_WIDTH / 2, WINDOW_HEIGHT - 100);
+            if (state_timer > 2.0)
+            {
+                state = 1;
+                state_timer = 0.0;
+            }
             break;
+
         case 1: // Goal
             DrawGoal();
+            if (state_timer > 2.0)
+            {
+                state = 2;
+                state_timer = 0.0;
+            }
             break;
-        case 2: // Landscape with Mikasa moving
+
+        case 2: // Mikasa moving outside the window
             mikasa_movement_time += elapsed_seconds;
-            mikasa_x = 50 + (int)(mikasa_movement_time * 200); 
+            mikasa_x = 50 + static_cast<int>(mikasa_movement_time * 200); // Adjust speed as needed
             DrawLandscape(mikasa_x);
             if (mikasa_x < WINDOW_WIDTH)
             {
@@ -446,58 +455,79 @@ int main()
             }
             else
             {
+                // Mikasa has moved outside the window; transition to next state
                 state = 3;
-                mikasa_x = 50; // Reset Mikasa's position for the obstacle scenario
-                mikasa_movement_time = 0.0; // Reset movement time for the next state
-                state_timer = 0.0; // Reset state timer
+                mikasa_x = 50; // Reset Mikasa's position
+                mikasa_movement_time = 0.0;
+                state_timer = 0.0;
             }
             break;
-        case 3: // Obstacle scenario
-            DrawLandscape(WINDOW_WIDTH + 1); 
-            DrawStickFigure(mikasa_x, WINDOW_HEIGHT - 100);
+
+        case 3: // Obstacle appears with Mikasa at initial position
+            DrawLandscape(WINDOW_WIDTH + 1); // Draw landscape without Mikasa moving
+            DrawStickFigure(mikasa_x, WINDOW_HEIGHT - 100); // Mikasa at initial position
             DrawObstacle();
-            
-            if (state_timer > 1.0 && !text_visible)
-            {
-                text_visible = true;
-            }
-            if (text_visible)
-            {
-                DrawObstacleText();
-            }
-            
-            if (state_timer > 2.0 && !speech_bubble_visible)
-            {
-                speech_bubble_visible = true;
-            }
-            if (speech_bubble_visible)
-            {
-                DrawSpeechBubble(mikasa_x + 20, WINDOW_HEIGHT - 100);
-            }
-            
-            if (state_timer > 4.0)
-            {
-                state = 4; 
-                state_timer = 0.0; 
-            }
+            state = 4; // Move to the next state in the following frame
+            state_timer = 0.0;
             break;
-        case 4: // Show "Entering obstacle world" text
-            DrawEnteringText();
-            if (state_timer > 2.0)
+
+        case 4: // Show "Challenge obstacle?" text
+            DrawLandscape(WINDOW_WIDTH + 1); // Ensure landscape is drawn
+            DrawStickFigure(mikasa_x, WINDOW_HEIGHT - 100); // Mikasa at initial position
+            DrawObstacle();
+            DrawObstacleText();
+            if (state_timer > 1.0)
             {
                 state = 5;
                 state_timer = 0.0;
             }
             break;
-        case 5: // Flashing effect
-            DrawEnteringEffect(state_timer);
-            if (state_timer > 2.0)
+
+        case 5: // Show speech bubble
+            DrawLandscape(WINDOW_WIDTH + 1);
+            DrawStickFigure(mikasa_x, WINDOW_HEIGHT - 100);
+            DrawObstacle();
+            DrawObstacleText();
+            DrawSpeechBubble(mikasa_x + 20, WINDOW_HEIGHT - 100);
+            if (state_timer > 1.0)
             {
                 state = 6;
                 state_timer = 0.0;
             }
             break;
-        case 6: // Space game
+
+        case 6: // Wait before showing entering text
+            DrawLandscape(WINDOW_WIDTH + 1);
+            DrawStickFigure(mikasa_x, WINDOW_HEIGHT - 100);
+            DrawObstacle();
+            DrawObstacleText();
+            DrawSpeechBubble(mikasa_x + 20, WINDOW_HEIGHT - 100);
+            if (state_timer > 1.0)
+            {
+                state = 7;
+                state_timer = 0.0;
+            }
+            break;
+
+        case 7: // Show "Entering obstacle world" text
+            DrawEnteringText();
+            if (state_timer > 2.0)
+            {
+                state = 8;
+                state_timer = 0.0;
+            }
+            break;
+
+        case 8: // Flashing effect
+            DrawEnteringEffect(state_timer);
+            if (state_timer > 2.0)
+            {
+                state = 9;
+                state_timer = 0.0;
+            }
+            break;
+
+        case 9: // Space game
             glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -506,14 +536,14 @@ int main()
             if (current_target < NUM_TARGETS)
             {
                 int target_x = tx[current_target];
-                
+
                 if (x < target_x)
                 {
-                    x += std::min(5, target_x - x); 
+                    x += std::min(5, target_x - x);
                 }
                 else if (x > target_x)
                 {
-                    x -= std::min(5, x - target_x); 
+                    x -= std::min(5, x - target_x);
                 }
 
                 if (x == target_x && !mState && shoot_timer >= 1.0)
@@ -596,28 +626,37 @@ int main()
 
             if (current_target >= NUM_TARGETS)
             {
-                state = 7;
+                state = 10;
                 state_timer = 0.0;
             }
             break;
-        case 7: // Show "Obstacle world conquered. Returning back." text
+
+        case 10: // Show "Obstacle world conquered. Returning back." text
             DrawConqueredText();
             if (state_timer > 2.0)
             {
-                state = 8; // Move to final state
+                state = 11; // Move to final state
                 state_timer = 0.0;
             }
             break;
-        case 8: // Final state
-            // Add any final state logic here
+
+        case 11: // Final state
+            // Add any final state logic here (e.g., exit, restart, etc.)
+            break;
+
+        default:
             break;
         }
 
-        if (state < 4 && state_timer > 2.0)
-        {
-            state++;
-            state_timer = 0.0;
-        }
+        // Remove automatic state transitions
+        // Each state now handles its own transitions
+
+        // Uncomment the following lines if you want to have automatic transitions for specific states beyond customization
+        // if (state < 4 && state_timer > 2.0)
+        // {
+        //     state++;
+        //     state_timer = 0.0;
+        // }
 
         DrawTimer(total_elapsed_seconds);
         FsSwapBuffers();
