@@ -4,10 +4,15 @@
 #include <cmath>
 #include <ctime>
 #include <algorithm>
+#include "yssimplesound.h"
+#include <cstdio>  // For sprintf
+#include <cstdlib> // For rand
+#include <chrono>  // For time measurement
 
 const int WINDOW_WIDTH = 800;
 const int WINDOW_HEIGHT = 640;
 
+// Draws the title at the center of the window
 void DrawTitle(const char* title)
 {
     glColor3ub(255, 255, 255);
@@ -16,6 +21,7 @@ void DrawTitle(const char* title)
     YsGlDrawFontBitmap20x32(title);
 }
 
+// Draws the goal text at the center of the window
 void DrawGoal()
 {
     glColor3ub(255, 255, 255);
@@ -25,6 +31,7 @@ void DrawGoal()
     YsGlDrawFontBitmap16x24(goal);
 }
 
+// Draws the landscape and "START" board if Mikasa is on screen
 void DrawLandscape(int mikasa_x)
 {
     glColor3ub(0, 255, 0);
@@ -33,7 +40,6 @@ void DrawLandscape(int mikasa_x)
     glVertex2i(WINDOW_WIDTH, WINDOW_HEIGHT - 100);
     glEnd();
 
-    // Draw "START" board only if Mikasa is on screen
     if (mikasa_x < WINDOW_WIDTH)
     {
         glColor3ub(255, 255, 255);
@@ -49,6 +55,7 @@ void DrawLandscape(int mikasa_x)
     }
 }
 
+// Draws a stick figure at the specified position
 void DrawStickFigure(int x, int y)
 {
     glColor3ub(255, 255, 255);
@@ -63,36 +70,33 @@ void DrawStickFigure(int x, int y)
     }
     glEnd();
 
-    // Body
+    // Body, Arms, and Legs
     glBegin(GL_LINES);
-    glVertex2i(x, y - 30);
-    glVertex2i(x, y);
-    // Arms
-    glVertex2i(x - 20, y - 15);
-    glVertex2i(x + 20, y - 15);
-    // Legs
-    glVertex2i(x, y);
-    glVertex2i(x - 10, y + 30);
-    glVertex2i(x, y);
-    glVertex2i(x + 10, y + 30);
+    glVertex2i(x, y - 30); glVertex2i(x, y);
+    glVertex2i(x - 20, y - 15); glVertex2i(x + 20, y - 15);
+    glVertex2i(x, y); glVertex2i(x - 10, y + 30);
+    glVertex2i(x, y); glVertex2i(x + 10, y + 30);
     glEnd();
 }
 
+// Sets the background color to black
 void SetBackgroundColor()
 {
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);  // Set to black
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
+// Draws the timer at the top of the window
 void DrawTimer(double seconds)
 {
     glColor3ub(255, 255, 255);
     char timerText[20];
     sprintf(timerText, "Time: %.1f", seconds);
-    int textWidth = strlen(timerText) * 16; // Assuming 16 pixels per character
+    int textWidth = strlen(timerText) * 16;
     glRasterPos2i(WINDOW_WIDTH / 2 - textWidth / 2, 30);
     YsGlDrawFontBitmap16x24(timerText);
 }
 
+// Draws an obstacle at the center of the window
 void DrawObstacle()
 {
     glColor3ub(255, 255, 255);
@@ -104,6 +108,7 @@ void DrawObstacle()
     glEnd();
 }
 
+// Draws a speech bubble with "Yes" text
 void DrawSpeechBubble(int x, int y)
 {
     glColor3ub(255, 255, 255);
@@ -120,6 +125,7 @@ void DrawSpeechBubble(int x, int y)
     YsGlDrawFontBitmap16x24("Yes");
 }
 
+// Draws the "Challenge obstacle?" text
 void DrawObstacleText()
 {
     glColor3ub(255, 255, 255);
@@ -129,9 +135,10 @@ void DrawObstacleText()
     YsGlDrawFontBitmap16x24(text);
 }
 
-void DrawSpaceShip(int x,int y)
+// Draws a spaceship at the specified position
+void DrawSpaceShip(int x, int y)
 {
-    glColor3ub(255,255,255);  
+    glColor3ub(255, 255, 255);  
     glBegin(GL_LINE_STRIP);
     glVertex2i(x+-3,y+-15);
     glVertex2i(x+-7,y+12);
@@ -198,9 +205,10 @@ void DrawSpaceShip(int x,int y)
     glEnd();
 }
 
-void DrawMissile(int x,int y)
+// Draws a missile at the specified position
+void DrawMissile(int x, int y)
 {
-    glColor3ub(255,255,255);  
+    glColor3ub(255, 255, 255);  
     glBegin(GL_LINE_STRIP);
     glVertex2i(x+11,y+-9);
     glVertex2i(x+10,y+19);
@@ -243,7 +251,7 @@ void DrawMissile(int x,int y)
     glVertex2i(x+15,y+-8);
     glVertex2i(x+15,y+-5);
     glEnd();
-    glColor3ub(255,0,0);  
+    glColor3ub(255, 0, 0);  
     glBegin(GL_LINE_STRIP);
     glVertex2i(x+10,y+19);
     glVertex2i(x+11,y+29);
@@ -255,9 +263,10 @@ void DrawMissile(int x,int y)
     glEnd();
 }
 
-void DrawUFO(int x,int y)
+// Draws a UFO at the specified position
+void DrawUFO(int x, int y)
 {
-    glColor3ub(255,255,255);  
+    glColor3ub(255, 255, 255);  
     glBegin(GL_LINE_STRIP);
     glVertex2i(x+-9,y+-8);
     glVertex2i(x+8,y+-20);
@@ -307,11 +316,13 @@ void DrawUFO(int x,int y)
     glEnd();
 }
 
+// Checks for collision between missile and target
 bool CheckCollision(int mx, int my, int tx, int ty)
 {
     return (tx-20 <= mx && mx <= tx+40 && ty-20 <= my && my <= ty+25);
 }
 
+// Draws an entering effect with flashing background
 void DrawEnteringEffect(double elapsed_time)
 {
     int flash_count = static_cast<int>(elapsed_time * 4); // 4 flashes per second
@@ -326,6 +337,7 @@ void DrawEnteringEffect(double elapsed_time)
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
+// Draws the space game elements
 void DrawSpaceGame(int spaceship_x, int spaceship_y, int mikasa_x, int mikasa_y, 
                    bool missile_state, int missile_x, int missile_y,
                    const int tx[], const int ty[], const bool tState[], int num_targets)
@@ -347,6 +359,7 @@ void DrawSpaceGame(int spaceship_x, int spaceship_y, int mikasa_x, int mikasa_y,
     }
 }
 
+// Draws the "Entering obstacle world" text
 void DrawEnteringText()
 {
     glColor3ub(255, 255, 255);
@@ -356,6 +369,7 @@ void DrawEnteringText()
     YsGlDrawFontBitmap16x24(text);
 }
 
+// Draws the "Obstacle world conquered. Returning back." text
 void DrawConqueredText()
 {
     glColor3ub(255, 255, 255);
@@ -369,53 +383,100 @@ void DrawConqueredText()
     YsGlDrawFontBitmap16x24(text2);
 }
 
-void DrawSteps(int mikasa_x)
-{
-    glColor3ub(255, 255, 255);
-    glBegin(GL_LINES);
-    glVertex2i(WINDOW_WIDTH / 2, WINDOW_HEIGHT - 100);
-    glVertex2i(WINDOW_WIDTH / 2 + 100, WINDOW_HEIGHT - 200); 
-    glVertex2i(WINDOW_WIDTH / 2 + 100, WINDOW_HEIGHT - 200);
-    glVertex2i(WINDOW_WIDTH / 2 + 200, WINDOW_HEIGHT - 200); 
-    glEnd();
-
-
-    glColor3ub(0, 255, 0);
-    glBegin(GL_LINES);
-    glVertex2i(0, WINDOW_HEIGHT - 100);
-    glVertex2i(WINDOW_WIDTH / 2, WINDOW_HEIGHT - 100); 
-    glVertex2i(WINDOW_WIDTH / 2 + 200, WINDOW_HEIGHT - 200); 
-    glVertex2i(WINDOW_WIDTH, WINDOW_HEIGHT - 200); 
-    glEnd();
-}
-
-void DrawEndTower()
+// Draws the end board
+void DrawEndBoard()
 {
     glColor3ub(255, 255, 255);
     glBegin(GL_LINE_LOOP);
-    glVertex2i(WINDOW_WIDTH / 2 + 300, WINDOW_HEIGHT - 200);
-    glVertex2i(WINDOW_WIDTH / 2 + 400, WINDOW_HEIGHT - 200);
-    glVertex2i(WINDOW_WIDTH / 2 + 400, WINDOW_HEIGHT - 300);
-    glVertex2i(WINDOW_WIDTH / 2 + 300, WINDOW_HEIGHT - 300);
+    glVertex2i(WINDOW_WIDTH/2 - 75, WINDOW_HEIGHT - 600);
+    glVertex2i(WINDOW_WIDTH/2 + 75, WINDOW_HEIGHT - 600);
+    glVertex2i(WINDOW_WIDTH/2 + 75, WINDOW_HEIGHT - 500);
+    glVertex2i(WINDOW_WIDTH/2 - 75, WINDOW_HEIGHT - 500);
     glEnd();
-
-    glRasterPos2i(WINDOW_WIDTH / 2 + 320, WINDOW_HEIGHT - 250);
+    
+    glRasterPos2i(WINDOW_WIDTH/2 - 30, WINDOW_HEIGHT - 550);
     YsGlDrawFontBitmap16x24("END");
+}
 
+// Draws a diamond at the specified position
+void DrawDiamond(int x, int y, int size)
+{
+    glColor3ub(255, 255, 255);
+    glBegin(GL_LINE_LOOP);
+    glVertex2i(x, y - size);        // top
+    glVertex2i(x + size, y);        // right
+    glVertex2i(x, y + size);        // bottom
+    glVertex2i(x - size, y);        // left
+    glEnd();
+}
 
-    // Flagpole
+// Draws a ramp
+void DrawRamp()
+{
+    glColor3ub(0, 255, 0);  // Green color for the ramp
+    glBegin(GL_LINE_STRIP);
+    glVertex2i(0, WINDOW_HEIGHT - 100);  // Start from the left edge
+    glVertex2i(WINDOW_WIDTH / 2, WINDOW_HEIGHT - 100);  // Horizontal part
+    glVertex2i(WINDOW_WIDTH, WINDOW_HEIGHT / 2);  // Ramp goes up
+    glEnd();
+
+    // Green horizontal line at the bottom
     glBegin(GL_LINES);
-    glVertex2i(WINDOW_WIDTH / 2 + 350, WINDOW_HEIGHT - 300);
-    glVertex2i(WINDOW_WIDTH / 2 + 350, WINDOW_HEIGHT - 350);
+    glVertex2i(0, WINDOW_HEIGHT - 100);
+    glVertex2i(WINDOW_WIDTH, WINDOW_HEIGHT - 100);
+    glEnd();
+}
+
+// Draws the "Destroy targets" text
+void DrawDestroyTargetsText()
+{
+    glColor3ub(255, 255, 255);
+    const char* text = "Destroy targets";
+    int textWidth = strlen(text) * 16;
+    glRasterPos2i(WINDOW_WIDTH / 2 - textWidth / 2, WINDOW_HEIGHT / 2);
+    YsGlDrawFontBitmap16x24(text);
+}
+
+// Draws a refined diamond with internal lines
+void DrawRefinedDiamond(int x, int y, int size)
+{
+    glColor3ub(255, 255, 255);
+    glBegin(GL_LINE_LOOP);
+    glVertex2i(x, y - size);        // top
+    glVertex2i(x + size, y);        // right
+    glVertex2i(x, y + size);        // bottom
+    glVertex2i(x - size, y);        // left
     glEnd();
 
-    // Flag
-    glBegin(GL_TRIANGLES);
-    glVertex2i(WINDOW_WIDTH / 2 + 350, WINDOW_HEIGHT - 350);
-    glVertex2i(WINDOW_WIDTH / 2 + 380, WINDOW_HEIGHT - 330);
-    glVertex2i(WINDOW_WIDTH / 2 + 350, WINDOW_HEIGHT - 310);
-    glEnd();
+    // Internal lines
+    glBegin(GL_LINES);
+    glVertex2i(x, y - size);        // top to bottom
+    glVertex2i(x, y + size);
+    glVertex2i(x - size, y);        // left to right
+    glVertex2i(x + size, y);
 
+    // Top internal lines
+    glVertex2i(x, y - size);
+    glVertex2i(x - size / 2, y);
+    glVertex2i(x, y - size);
+    glVertex2i(x + size / 2, y);
+
+    // Bottom internal lines
+    glVertex2i(x - size / 2, y);
+    glVertex2i(x, y + size);
+    glVertex2i(x + size / 2, y);
+    glVertex2i(x, y + size);
+    glEnd();
+}
+
+// Draws the end message
+void DrawEndMessage()
+{
+    glColor3ub(255, 255, 255);
+    const char* text1 = "Goal Reached!";
+    int textWidth1 = strlen(text1) * 16;
+    glRasterPos2i(WINDOW_WIDTH / 2 - textWidth1 / 2, WINDOW_HEIGHT / 2 + 120);
+    YsGlDrawFontBitmap16x24(text1);
 }
 
 #define NUM_PARTICLES 200
@@ -425,8 +486,22 @@ int main()
     FsOpenWindow(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, 1);
     SetBackgroundColor();
 
+    // Initialize sound player
+    YsSoundPlayer player;
+    player.Start(); // Start the sound player
+
+    // Declare and load the song
+    YsSoundPlayer::SoundData song;
+    if(YSOK!=song.LoadWav("song.wav") && YSOK!=song.LoadWav("datafiles/song.wav"))
+    {
+        printf("Error! Cannot load song.wav!\n");
+    }
+
+    // Start playing the song in the background
+    player.PlayBackground(song);
+
     int state = 0;
-    clock_t start_time = clock();
+    auto start_time = std::chrono::steady_clock::now(); // Use chrono for time
     int mikasa_x = 50;
     double total_elapsed_seconds = 0.0;
     double mikasa_movement_time = 0.0;
@@ -441,11 +516,11 @@ int main()
     for (int i = 0; i < NUM_TARGETS; ++i)
     {
         tState[i] = true;
-        tx[i] = (i + 1) * (WINDOW_WIDTH / (NUM_TARGETS + 1)); // Evenly distribute targets horizontally
-        ty[i] = 100; // All targets at the same height
+        tx[i] = (i + 1) * (WINDOW_WIDTH / (NUM_TARGETS + 1));
+        ty[i] = 100;
     }
 
-    int x = tx[0]; // Initialize spaceship at the leftmost target's x position
+    int x = tx[0];
     int y = WINDOW_HEIGHT - 100;
     int mx, my, mv = 10;
     bool mState = false;
@@ -457,19 +532,29 @@ int main()
     int current_target = 0;
     double shoot_timer = 0.0;
 
+    const char* obstacle_destroyed_text = "Obstacle destroyed";
+    int obstacle_destroyed_text_width = strlen(obstacle_destroyed_text) * 16;
+
+    int mikasa_y = WINDOW_HEIGHT - 100;
+
     while (true)
     {
         FsPollDevice();
+
+        // Keep the background music playing
+        player.KeepPlaying();  // This is crucial for continuous playback
+
         auto key = FsInkey();
         if (key == FSKEY_ESC)
         {
             break;
         }
 
-        double elapsed_seconds = (double)(clock() - start_time) / CLOCKS_PER_SEC;
+        auto current_time = std::chrono::steady_clock::now();
+        double elapsed_seconds = std::chrono::duration<double>(current_time - start_time).count();
         total_elapsed_seconds += elapsed_seconds;
         state_timer += elapsed_seconds;
-        start_time = clock();
+        start_time = current_time;
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -496,7 +581,7 @@ int main()
 
         case 2: // Mikasa moving outside the window
             mikasa_movement_time += elapsed_seconds;
-            mikasa_x = 50 + static_cast<int>(mikasa_movement_time * 200); // Adjust speed as needed
+            mikasa_x = 50 + static_cast<int>(mikasa_movement_time * 150); // Slower speed
             DrawLandscape(mikasa_x);
             if (mikasa_x < WINDOW_WIDTH)
             {
@@ -567,10 +652,16 @@ int main()
             }
             break;
 
-        case 8: // Flashing effect
-            DrawEnteringEffect(state_timer);
-            if (state_timer > 2.0)
-            {
+        case 8: // Show "Destroy targets" text with fade
+            glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            
+            if (state_timer < 2.0) {
+                // Fade out effect
+                int alpha = static_cast<int>(255 * (2.0 - state_timer) / 2.0);
+                glColor3ub(255, 255, 255);
+                DrawDestroyTargetsText();
+            } else {
                 state = 9;
                 state_timer = 0.0;
             }
@@ -673,6 +764,10 @@ int main()
                 glEnd();
             }
 
+            if (state_timer < 2.0) {
+                DrawDestroyTargetsText();
+            }
+
             if (current_target >= NUM_TARGETS)
             {
                 state = 10;
@@ -690,11 +785,19 @@ int main()
             break;
 
         case 11: // Returning to the obstacle frame, moving right
-            DrawLandscape(mikasa_x);
+            // Draw the original obstacle scene
+            DrawLandscape(WINDOW_WIDTH + 1);
             DrawObstacle();
-            DrawStickFigure(mikasa_x, WINDOW_HEIGHT - 100);
+            
+            // Draw "Obstacle destroyed" text above the obstacle
+            glColor3ub(255, 255, 255);
+            glRasterPos2i(WINDOW_WIDTH / 2 - obstacle_destroyed_text_width / 2, WINDOW_HEIGHT - 320);
+            YsGlDrawFontBitmap16x24(obstacle_destroyed_text);
+
+            // Move Mikasa from center to right
             mikasa_movement_time += elapsed_seconds;
-            mikasa_x = 50 + static_cast<int>(mikasa_movement_time * 200);
+            mikasa_x = WINDOW_WIDTH/2 + static_cast<int>(mikasa_movement_time * 150);
+            DrawStickFigure(mikasa_x, WINDOW_HEIGHT - 100);
 
             if (mikasa_x > WINDOW_WIDTH)
             {
@@ -704,88 +807,175 @@ int main()
             }
             break;
 
-        case 12: // Climbing steps
-            DrawSteps(mikasa_x);
-            DrawEndTower();
-
-            if (mikasa_x < WINDOW_WIDTH / 2 + 100) {
-                DrawStickFigure(mikasa_x, WINDOW_HEIGHT - 100);
+        case 12:  // Climbing ramp
+            DrawRamp();
+            if (mikasa_x < WINDOW_WIDTH / 2) {
+                DrawStickFigure(mikasa_x, WINDOW_HEIGHT - 100);  // Moving on horizontal part
                 mikasa_x += 5;
-            } else if (mikasa_x < WINDOW_WIDTH / 2 + 200) {
-                int y = WINDOW_HEIGHT - 100 - (mikasa_x - (WINDOW_WIDTH / 2 + 100));
-                DrawStickFigure(mikasa_x, y);
+            } else if (mikasa_x < WINDOW_WIDTH) {
+                mikasa_y = WINDOW_HEIGHT - 100 - (mikasa_x - WINDOW_WIDTH / 2) * 0.5;  // Adjust for ramp slope
+                DrawStickFigure(mikasa_x, mikasa_y);
                 mikasa_x += 5;
-            }
-            else
-            {
-                DrawStickFigure(mikasa_x, WINDOW_HEIGHT - 200); // Mikasa on top of the steps
-                if (mikasa_x < WINDOW_WIDTH / 2 + 300)
-                {
-                    mikasa_x += 5;
-                } else {
-
-                    state = 13;
-                    state_timer = 0;
-                    for (int i = 0; i < NUM_PARTICLES; ++i) {
-                        ex[i] = mikasa_x;
-                        ey[i] = WINDOW_HEIGHT - 200;
-                        evx[i] = rand() % 51 - 25;
-                        evy[i] = rand() % 51 - 25;
-                    }
-                    eState = true;
+            } else {
+                state = 13;
+                mikasa_x = 50;  // Reset position for final scene
+                mikasa_y = WINDOW_HEIGHT / 2;  // Set to new ground level
+                // Initialize particles for the explosion
+                eState = true;
+                eStep = 0;
+                for (int i = 0; i < NUM_PARTICLES; ++i) {
+                    ex[i] = WINDOW_WIDTH / 2;
+                    ey[i] = WINDOW_HEIGHT / 2;
+                    evx[i] = rand() % 21 - 10;
+                    evy[i] = rand() % 21 - 10;
                 }
             }
-
             break;
-        case 13:
-            DrawSteps(mikasa_x);
-            DrawEndTower();
-            DrawStickFigure(mikasa_x, WINDOW_HEIGHT - 200);
 
-            if (eState)
-            {
-                for (int i = 0; i < NUM_PARTICLES; ++i)
-                {
-                    ex[i] += evx[i];
-                    ey[i] += evy[i];
-                }
-                ++eStep;
-                if (100 < eStep)
-                {
-                    eState = false;
-                   break; // Game ends here
-                }
-            }
-
-            glColor3f(1, 0, 0);
-            glPointSize(2);
-            glBegin(GL_POINTS);
-            for (int i = 0; i < NUM_PARTICLES; ++i)
-            {
-                glVertex2i(ex[i], ey[i]);
-            }
+        case 13:  // Final scene with particles and diamond
+            // Draw the new horizontal ground line
+            glColor3ub(0, 255, 0);
+            glBegin(GL_LINES);
+            glVertex2i(0, WINDOW_HEIGHT / 2);
+            glVertex2i(WINDOW_WIDTH, WINDOW_HEIGHT / 2);
             glEnd();
 
+            DrawEndBoard();
+
+            // Move Mikasa to center
+            if (mikasa_x < WINDOW_WIDTH / 2) {
+                mikasa_x += 5;
+            }
+
+            DrawStickFigure(mikasa_x, mikasa_y);
+
+            // Particle explosion
+            if (eState) {
+                glColor3f(1, 0, 0);
+                glPointSize(2);
+                glBegin(GL_POINTS);
+                for (int i = 0; i < NUM_PARTICLES; ++i) {
+                    ex[i] += evx[i];
+                    ey[i] += evy[i];
+                    glVertex2i(ex[i], ey[i]);
+                }
+                glEnd();
+                
+                eStep++;
+                if (eStep > 50) {
+                    eState = false;
+                    state = 14;
+                }
+            }
             break;
+
+        case 14:  // Show diamond and end message
+            // Draw the new horizontal ground line
+            glColor3ub(0, 255, 0);
+            glBegin(GL_LINES);
+            glVertex2i(0, WINDOW_HEIGHT / 2);
+            glVertex2i(WINDOW_WIDTH, WINDOW_HEIGHT / 2);
+            glEnd();
+
+            DrawEndBoard();
+            DrawStickFigure(WINDOW_WIDTH / 2, mikasa_y);
+            DrawRefinedDiamond(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 - 100, 30);
+
+            if (state_timer > 2.0) {
+                DrawEndMessage();
+            }
+            if (state_timer > 8.0) {  // Transition after 4 seconds total
+                state = 15;
+                state_timer = 0.0;
+            }
+            break;
+
+        // Add new state for "Song created by Suno AI"
+        case 15:  // Hold the final snapshot for 2 more seconds
+        {
+            // Draw the same elements as in case 14
+            glColor3ub(0, 255, 0);
+            glBegin(GL_LINES);
+            glVertex2i(0, WINDOW_HEIGHT / 2);
+            glVertex2i(WINDOW_WIDTH, WINDOW_HEIGHT / 2);
+            glEnd();
+
+            DrawEndBoard();
+            DrawStickFigure(WINDOW_WIDTH / 2, mikasa_y);
+            DrawRefinedDiamond(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 - 100, 30);
+            DrawEndMessage();
+
+            if (state_timer > 2.0) {  // Hold for 2 seconds
+                state = 16;
+                state_timer = 0.0;
+            }
+            break;
+        }
+
+        case 16:  // Display "Song created by Suno AI"
+        {
+            glColor3ub(0, 0, 0);  // Clear the screen to black
+            glClear(GL_COLOR_BUFFER_BIT);
+
+            glColor3ub(255, 255, 255);
+            const char* sunoText = "Song created by Suno AI";
+            int sunoTextWidth = strlen(sunoText) * 16;
+            glRasterPos2i(WINDOW_WIDTH / 2 - sunoTextWidth / 2, WINDOW_HEIGHT / 2);
+            YsGlDrawFontBitmap16x24(sunoText);
+
+            if (state_timer > 2.0) {  // Display for 2 seconds
+                state = 17;
+                state_timer = 0.0;
+            }
+            break;
+        }
+
+        // Add new state for "Created by Adithya"
+        case 17: // Display "Created by Adithya"
+        {
+            glColor3ub(255, 255, 255);
+            const char* adithyaText = "Created by Adithya";
+            int adithyaTextWidth = strlen(adithyaText) * 16;
+            glRasterPos2i(WINDOW_WIDTH / 2 - adithyaTextWidth / 2, WINDOW_HEIGHT / 2);
+            YsGlDrawFontBitmap16x24(adithyaText);
+            if (state_timer > 2.0) {
+                state = 18; // Move to the next state or end
+                state_timer = 0.0;
+            }
+            break;
+        }
+
+        // Add new state for "Wait longer to listen to the complete song"
+        case 18: // Display "Wait longer to listen to the complete song"
+        {
+            glColor3ub(255, 255, 255);
+            const char* waitText = "Wait longer to listen to the complete song";
+            int waitTextWidth = strlen(waitText) * 16;
+            glRasterPos2i(WINDOW_WIDTH / 2 - waitTextWidth / 2, WINDOW_HEIGHT / 2);
+            YsGlDrawFontBitmap16x24(waitText);
+            if (state_timer > 2.0) {
+                state = 19; // Move to the next state or end
+                state_timer = 0.0;
+            }
+            break;
+        }
 
         default:
             break;
         }
 
-        // Remove automatic state transitions
-        // Each state now handles its own transitions
-
-        // Uncomment the following lines if you want to have automatic transitions for specific states beyond customization
-        // if (state < 4 && state_timer > 2.0)
-        // {
-        //     state++;
-        //     state_timer = 0.0;
-        // }
-
         DrawTimer(total_elapsed_seconds);
         FsSwapBuffers();
         FsSleep(16);
+
+    //     // Play sound at specific events
+    //     if (state == 0 && state_timer == 0.0) {
+    //         player.PlayOneShot(soundData);
+    //     }
     }
 
+    // Clean up sound player before exiting
+    player.Stop(song);
+    player.End();
     return 0;
 }
