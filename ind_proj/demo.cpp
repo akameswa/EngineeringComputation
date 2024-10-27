@@ -527,6 +527,10 @@ int main() {
         state_timer += elapsed_seconds;
         start_time = current_time;
 
+        if (total_elapsed_seconds >= 100.0) {
+            break; 
+        }
+
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         switch (state) {
