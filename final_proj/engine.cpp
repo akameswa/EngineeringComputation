@@ -4,6 +4,7 @@
 #include "yspng.h"  
 #include <vector>
 #include <string>
+#include "yssimplesound.h"
 
 class EngineSlide {
 private:
@@ -13,13 +14,16 @@ private:
     const int tableStartY = 150;
     const int rowHeight = 40;
     const int colWidth = 200;
-
     const int tableWidth = colWidth * 3;
     const int tableStartX = (windowWidth - tableWidth) / 2;
+    
+    const int buttonWidth = 200;
+    const int buttonHeight = 40;
+    const int buttonSpacing = 50;
 
     std::vector<std::string> characteristics = {
         "Inlet Design",
-        "Operating Speed", 
+        "Operating Speed",
         "Thrust Priority",
         "Engine Type",
         "Application"
@@ -35,7 +39,7 @@ private:
 
     std::vector<std::string> supersonic = {
         "Sharp, pointed lip",
-        "Above Mach 1.0", 
+        "Above Mach 1.0",
         "Maximum thrust",
         "Low-bypass with afterburner",
         "NASA X-59"
@@ -43,6 +47,9 @@ private:
 
     YsRawPngDecoder subsonicImage;
     YsRawPngDecoder supersonicImage;
+    YsSoundPlayer soundPlayer;
+    YsSoundPlayer::SoundData subsonicWav;
+    YsSoundPlayer::SoundData supersonicWav;
 
 public:
     bool LoadImages(const char* subsonicFile, const char* supersonicFile) {
@@ -57,15 +64,139 @@ public:
 
     void Draw() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
         DrawHeading();
         DrawTable();
         DrawImagePlaceholders();
-
+        DrawButtons();
         FsSwapBuffers();
     }
 
+    bool LoadResources(const char* subsonicImgFile, const char* supersonicImgFile,
+                      const char* subsonicSndFile, const char* supersonicSndFile) {
+        if (YSOK != subsonicImage.Decode(subsonicImgFile) || 
+            YSOK != supersonicImage.Decode(supersonicImgFile)) {
+            printf("Failed to load images.\n");
+            return false;
+        }
+
+        subsonicImage.Flip();
+        supersonicImage.Flip();
+
+        soundPlayer.Start();
+        if (YSOK != subsonicWav.LoadWav(subsonicSndFile) ||
+            YSOK != supersonicWav.LoadWav(supersonicSndFile)) {
+            printf("Failed to load audio files.\n");
+            return false;
+        }
+
+        return true;
+    }
+
+    void CleanUp() {
+        soundPlayer.End();
+    }
+
+    void StopAllSounds() {
+        soundPlayer.Stop(subsonicWav);
+        soundPlayer.Stop(supersonicWav);
+    }
+
+    void HandleClick(int mx, int my) {
+        int key = FsInkey();
+        if (key == 'm') {
+            StopAllSounds();
+            soundPlayer.PlayOneShot(subsonicWav);
+        }
+        else if (key == 'n') {
+            StopAllSounds();
+            soundPlayer.PlayOneShot(supersonicWav);
+        }
+
+        int buttonY = tableStartY + characteristics.size() * rowHeight * 1.6 + 250;
+        int subsonicX = (windowWidth - 2 * buttonWidth - buttonSpacing) / 2;
+        int supersonicX = subsonicX + buttonWidth + buttonSpacing;
+
+        if (mx >= subsonicX && mx <= subsonicX + buttonWidth &&
+            my >= buttonY && my <= buttonY + buttonHeight) {
+            StopAllSounds();
+            soundPlayer.PlayOneShot(subsonicWav);
+        }
+        else if (mx >= supersonicX && mx <= supersonicX + buttonWidth &&
+                my >= buttonY && my <= buttonY + buttonHeight) {
+            StopAllSounds();
+            soundPlayer.PlayOneShot(supersonicWav);
+        }
+    }
+
+    void PlaySubsonicSound() {
+        StopAllSounds();
+        soundPlayer.PlayOneShot(subsonicWav);
+    }
+
+    void PlaySupersonicSound() {
+        StopAllSounds();
+        soundPlayer.PlayOneShot(supersonicWav);
+    }
+
 private:
+    void DrawButtons() {
+        const int charWidth = 8;  
+        const int spacing = 50;
+        const int buttonPadding = 20;  
+        
+        const char* subText = "Press M to play Subsonic";
+        const char* superText = "Press N to play Supersonic";
+        
+        const int subTextWidth = strlen(subText) * charWidth;
+        const int superTextWidth = strlen(superText) * charWidth;
+        const int subButtonWidth = subTextWidth + 2 * buttonPadding;
+        const int superButtonWidth = superTextWidth + 2 * buttonPadding;
+
+        const int totalWidth = subButtonWidth + superButtonWidth + spacing;
+        const int startX = (windowWidth - totalWidth) / 2;
+        const int buttonY = tableStartY + characteristics.size() * rowHeight * 1.6 + 75;
+
+        int subsonicX = startX;
+        int supersonicX = startX + subButtonWidth + spacing;
+
+        glColor3ub(200, 200, 200);
+        glBegin(GL_QUADS);
+        glVertex2i(subsonicX, buttonY);
+        glVertex2i(subsonicX + subButtonWidth, buttonY);
+        glVertex2i(subsonicX + subButtonWidth, buttonY + buttonHeight);
+        glVertex2i(subsonicX, buttonY + buttonHeight);
+        glEnd();
+
+        glBegin(GL_QUADS);
+        glVertex2i(supersonicX, buttonY);
+        glVertex2i(supersonicX + superButtonWidth, buttonY);
+        glVertex2i(supersonicX + superButtonWidth, buttonY + buttonHeight);
+        glVertex2i(supersonicX, buttonY + buttonHeight);
+        glEnd();
+
+        glColor3ub(0, 0, 0);
+        glRasterPos2i(subsonicX + buttonPadding, buttonY + 25);
+        YsGlDrawFontBitmap8x12(subText);
+        
+        glRasterPos2i(supersonicX + buttonPadding, buttonY + 25);
+        YsGlDrawFontBitmap8x12(superText);
+
+        glColor3ub(0, 0, 0);
+        glBegin(GL_LINE_LOOP);
+        glVertex2i(subsonicX, buttonY);
+        glVertex2i(subsonicX + subButtonWidth, buttonY);
+        glVertex2i(subsonicX + subButtonWidth, buttonY + buttonHeight);
+        glVertex2i(subsonicX, buttonY + buttonHeight);
+        glEnd();
+
+        glBegin(GL_LINE_LOOP);
+        glVertex2i(supersonicX, buttonY);
+        glVertex2i(supersonicX + superButtonWidth, buttonY);
+        glVertex2i(supersonicX + superButtonWidth, buttonY + buttonHeight);
+        glVertex2i(supersonicX, buttonY + buttonHeight);
+        glEnd();
+    }
+
     void DrawHeading() {
         glColor3ub(0, 0, 0);
         const char* heading = "Aircraft Engine Types: Subsonic vs Supersonic";
@@ -93,21 +224,21 @@ private:
         }
 
         glRasterPos2i(tableStartX + 20, tableStartY - 20);
-        YsGlDrawFontBitmap6x7("Characteristic");
+        YsGlDrawFontBitmap12x16("Characteristic");
         glRasterPos2i(tableStartX + colWidth + 20, tableStartY - 20);
-        YsGlDrawFontBitmap6x7("Subsonic");
+        YsGlDrawFontBitmap12x16("Subsonic");
         glRasterPos2i(tableStartX + colWidth * 2 + 20, tableStartY - 20);
-        YsGlDrawFontBitmap6x7("Supersonic");
+        YsGlDrawFontBitmap12x16("Supersonic");
 
         for(int i = 0; i < characteristics.size(); i++) {
             glRasterPos2i(tableStartX + 10, tableStartY + i * rowHeight + 25);
-            YsGlDrawFontBitmap6x7(characteristics[i].c_str());
+            YsGlDrawFontBitmap8x12(characteristics[i].c_str());
             
             glRasterPos2i(tableStartX + colWidth + 10, tableStartY + i * rowHeight + 25);
-            YsGlDrawFontBitmap6x7(subsonic[i].c_str());
+            YsGlDrawFontBitmap8x12(subsonic[i].c_str());
             
             glRasterPos2i(tableStartX + colWidth * 2 + 10, tableStartY + i * rowHeight + 25);
-            YsGlDrawFontBitmap6x7(supersonic[i].c_str());
+            YsGlDrawFontBitmap8x12(supersonic[i].c_str());
         }
     }
 
@@ -127,42 +258,33 @@ private:
 
         glRasterPos2i(supersonicImageX, imageY);
         glDrawPixels(supersonicImage.wid, supersonicImage.hei, GL_RGBA, GL_UNSIGNED_BYTE, supersonicImage.rgba);
-
-        const char* subsonicCaption = "Subsonic Inlet";
-        const char* supersonicCaption = "Supersonic Inlet";
-        int subCaptionWidth = strlen(subsonicCaption) * 6;
-        int superCaptionWidth = strlen(supersonicCaption) * 6;
-        
-        glColor3ub(0, 0, 0);
-        glRasterPos2i(subsonicImageX + (imageWidth - subCaptionWidth)/2, 
-                    imageY + 20);
-        YsGlDrawFontBitmap6x7(subsonicCaption);
-        
-        glRasterPos2i(supersonicImageX + (imageWidth - superCaptionWidth)/2, 
-                    imageY + 20);
-        YsGlDrawFontBitmap6x7(supersonicCaption);
     }
 };
 
 int main(void) {
-    FsOpenWindowOption opt;
-    opt.x0 = 16;
-    opt.y0 = 16;
-    opt.wid = 800;
-    opt.hei = 600;
-    opt.useDoubleBuffer = true;
-    FsOpenWindow(opt);
-
+    FsOpenWindow(16, 16, 800, 600, 1);
     EngineSlide slide;
-    if (!slide.LoadImages("subsonic.png", "supersonic.png")) {
+    
+    if (!slide.LoadResources("subsonic.png", "supersonic.png",
+                            "subsonic_cut.wav", "supersonic_cut.wav")) {
         return 1;
     }
 
     while(FsInkey() != FSKEY_ESC) {
         FsPollDevice();
+        
+        int key = FsInkey();
+        if (key == FSKEY_M) {
+            slide.PlaySubsonicSound();
+        }
+        else if (key == FSKEY_N) {
+            slide.PlaySupersonicSound();
+        }
+        
         slide.Draw();
         FsSleep(25);
     }
 
+    slide.CleanUp();
     return 0;
 }
