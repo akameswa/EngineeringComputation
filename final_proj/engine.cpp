@@ -50,8 +50,12 @@ private:
     YsSoundPlayer soundPlayer;
     YsSoundPlayer::SoundData subsonicWav;
     YsSoundPlayer::SoundData supersonicWav;
+    YsSoundPlayer::SoundData narrationWav;
+    bool isNarrationPlaying;
 
 public:
+    EngineSlide() : isNarrationPlaying(false) {}
+
     bool LoadImages(const char* subsonicFile, const char* supersonicFile) {
         if (YSOK != subsonicImage.Decode(subsonicFile) || YSOK != supersonicImage.Decode(supersonicFile)) {
             printf("Failed to load images.\n");
@@ -84,15 +88,30 @@ public:
 
         soundPlayer.Start();
         if (YSOK != subsonicWav.LoadWav(subsonicSndFile) ||
-            YSOK != supersonicWav.LoadWav(supersonicSndFile)) {
+            YSOK != supersonicWav.LoadWav(supersonicSndFile) ||
+            YSOK != narrationWav.LoadWav("narration.wav")) {
             printf("Failed to load audio files.\n");
             return false;
         }
 
+        soundPlayer.PlayBackground(narrationWav);
+        isNarrationPlaying = true;
+
         return true;
     }
 
+    void ToggleNarration() {
+        if (isNarrationPlaying) {
+            soundPlayer.Stop(narrationWav);
+            isNarrationPlaying = false;
+        } else {
+            soundPlayer.PlayBackground(narrationWav);
+            isNarrationPlaying = true;
+        }
+    }
+
     void CleanUp() {
+        soundPlayer.Stop(narrationWav);
         soundPlayer.End();
     }
 
@@ -279,6 +298,9 @@ int main(void) {
         }
         else if (key == FSKEY_N) {
             slide.PlaySupersonicSound();
+        }
+        else if (key == FSKEY_SPACE) {
+            slide.ToggleNarration();
         }
         
         slide.Draw();
