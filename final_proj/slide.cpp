@@ -278,6 +278,8 @@ private:
     YsSoundPlayer::SoundData audio;
     YsSoundPlayer::SoundData subsonicWav;
     YsSoundPlayer::SoundData supersonicWav;
+    YsSoundPlayer::SoundData narrationWav;
+    bool isNarrationPlaying = true;
     YsRawPngDecoder subsonicImage;
     YsRawPngDecoder supersonicImage;
     bool isPaused = false;
@@ -313,11 +315,15 @@ public:
         subsonicImage.Flip();
         supersonicImage.Flip();
         
+        PrepAudio(narrationWav, "narration.wav");
         PrepAudio(subsonicWav, "subsonic_cut.wav");
         PrepAudio(supersonicWav, "supersonic_cut.wav");
     }
 
     SlideTransition RunSlide() {
+        PlayBGMAudio(narrationWav);  // Start narration when slide begins
+        isNarrationPlaying = true;
+
         while (FsCheckWindowOpen() && slideRunning) {
             FsPollDevice();
             int lb, mb, rb, mx, my;
@@ -326,10 +332,14 @@ public:
 
             if (keyCode == FSKEY_SPACE) {
                 if (!isPaused) {
-                    StopAudio(audio);
+                    StopAudio(narrationWav);
+                    StopAudio(subsonicWav);
+                    StopAudio(supersonicWav);
                     isPaused = true;
                 } else {
-                    PlayBGMAudio(audio);
+                    if (!IsAudioPlaying(narrationWav)) {
+                        PlayBGMAudio(narrationWav);
+                    }
                     isPaused = false;
                 }
             }
@@ -348,11 +358,15 @@ public:
             FsSleep(20);
 
             if (keyCode == FSKEY_LEFT) {
-                StopAll(audio);
+                StopAudio(narrationWav);
+                StopAudio(subsonicWav);
+                StopAudio(supersonicWav);
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
                 return PREVIOUS;
             } else if (keyCode == FSKEY_RIGHT) {
-                StopAll(audio);
+                StopAudio(narrationWav);
+                StopAudio(subsonicWav);
+                StopAudio(supersonicWav);
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
                 return NEXT;
             }
