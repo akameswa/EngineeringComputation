@@ -24,6 +24,11 @@ Right now, the user pause functionality for sound isn't implemented. Don't worry
 #include "yssimplesound.h"
 #include <iostream>
 #include <cmath>
+#include "ysglfontdata.h"
+#include "yspng.h"  
+#include <vector>
+#include <string>
+#include "yssimplesound.h"
 
 /*
 This enum declared globally is needed for the main function to run.
@@ -262,21 +267,57 @@ Private Functions don't get inherited.
 
 
 
-class Slide_andrewID2 : public Slide {
+class Slide_akameswa : public Slide {
 private:
-    double aerofoilAngle = 0.0;
-    bool dragging = false;
+    const int windowWidth = 800;
+    const int windowHeight = 600;
+    const int tableStartY = 150;
+    const int rowHeight = 40;
+    const int colWidth = 200;
+    
     YsSoundPlayer::SoundData audio;
+    YsSoundPlayer::SoundData subsonicWav;
+    YsSoundPlayer::SoundData supersonicWav;
+    YsRawPngDecoder subsonicImage;
+    YsRawPngDecoder supersonicImage;
     bool isPaused = false;
 
+    std::vector<std::string> characteristics = {
+        "Inlet Design",
+        "Operating Speed",
+        "Thrust Priority",
+        "Engine Type",
+        "Application"
+    };
+
+    std::vector<std::string> subsonic = {
+        "Thick, rounded lip",
+        "Below Mach 0.8",
+        "Fuel efficiency",
+        "High-bypass turbofan",
+        "A-10 Thunderbolt II"
+    };
+
+    std::vector<std::string> supersonic = {
+        "Sharp, pointed lip",
+        "Above Mach 1.0",
+        "Maximum thrust",
+        "Low-bypass with afterburner",
+        "NASA X-59"
+    };
+
 public:
-    Slide_andrewID2() : Slide() {}
+    Slide_akameswa() : Slide() {
+        subsonicImage.Decode("subsonic.png");
+        supersonicImage.Decode("supersonic.png");
+        subsonicImage.Flip();
+        supersonicImage.Flip();
+        
+        PrepAudio(subsonicWav, "subsonic_cut.wav");
+        PrepAudio(supersonicWav, "supersonic_cut.wav");
+    }
 
-    SlideTransition RunSlide() 
-    {
-        PrepAudio(audio, "crowd.wav"); // If you have more than 1 audio file, load them into audio1, audio2, etc. You'll have to call the PrepAudio fn for each of them
-        PlayBGMAudio(audio);
-
+    SlideTransition RunSlide() {
         while (FsCheckWindowOpen() && slideRunning) {
             FsPollDevice();
             int lb, mb, rb, mx, my;
@@ -285,38 +326,33 @@ public:
 
             if (keyCode == FSKEY_SPACE) {
                 if (!isPaused) {
-                    StopAudio(audio);  // Pause audio
+                    StopAudio(audio);
                     isPaused = true;
                 } else {
-                    PlayBGMAudio(audio);  // Resume audio
+                    PlayBGMAudio(audio);
                     isPaused = false;
                 }
             }
-            player.KeepPlaying();
-            ActiveAnimation(mx, my, lb, mb, rb); // This is outside of the below loop because I want to be able to interact (active animation) even if Paused
 
-            if(!isPaused)
-            {
-                
-                
-                
+            if (lb) {
+                StopAudio(supersonicWav);  
+                PlayBGMAudio(subsonicWav);
             }
-            Render();
+            if (rb) {
+                StopAudio(subsonicWav);    
+                PlayBGMAudio(supersonicWav);
+            }
 
+            player.KeepPlaying();
+            Render();
             FsSleep(20);
-            
-            /*
-            This section below takes care of global slide controls (PREV, NEXT, etc.).
-            The return types are of type SlideTransition, which is a globally defined enum (declared at the very top of this code)
-            If any further controls are required, modify the enum accordingly by adding your keyword to the end
-            */ 
-        
+
             if (keyCode == FSKEY_LEFT) {
-                StopAll(audio); // Ideally only one audio is played at a time. If there is more than one playing, explicitly mention StopAudio() for each of them
+                StopAll(audio);
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
                 return PREVIOUS;
             } else if (keyCode == FSKEY_RIGHT) {
-                StopAll(audio); // Ideally only one audio is played at a time. If there is more than one playing, explicitly mention StopAudio() for each of them
+                StopAll(audio);
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
                 return NEXT;
             }
@@ -325,62 +361,80 @@ public:
     }
 
 private:
-/*
-You can add any additional functions here, whatever is needed to make the slide.
-Private Functions don't get inherited
-*/
+    void DrawTable() {
+        const int tableWidth = colWidth * 3;
+        const int tableStartX = (windowWidth - tableWidth) / 2;
 
-    void DrawAerofoil() {
-        double angle = aerofoilAngle; 
+        glColor3ub(0, 0, 0);
+        
+        // Draw table grid
+        for(int i = 0; i <= characteristics.size(); i++) {
+            glBegin(GL_LINES);
+            glVertex2i(tableStartX, tableStartY + i * rowHeight);
+            glVertex2i(tableStartX + tableWidth, tableStartY + i * rowHeight);
+            glEnd();
+        }
 
-        double halfWidth = 50.0;
-        double halfHeight = 10.0;
+        for(int i = 0; i <= 3; i++) {
+            glBegin(GL_LINES);
+            glVertex2i(tableStartX + i * colWidth, tableStartY);
+            glVertex2i(tableStartX + i * colWidth, tableStartY + characteristics.size() * rowHeight);
+            glEnd();
+        }
 
-        double centerX = 400.0;  
-        double centerY = 300.0;  
+        // Draw headers and content
+        glRasterPos2i(tableStartX + 20, tableStartY - 20);
+        YsGlDrawFontBitmap12x16("Characteristic");
+        glRasterPos2i(tableStartX + colWidth + 20, tableStartY - 20);
+        YsGlDrawFontBitmap12x16("Subsonic");
+        glRasterPos2i(tableStartX + colWidth * 2 + 20, tableStartY - 20);
+        YsGlDrawFontBitmap12x16("Supersonic");
 
-        double cosAngle = cos(angle);
-        double sinAngle = sin(angle);
-
-        double x1 = centerX + (-halfWidth * cosAngle - (-halfHeight) * sinAngle);
-        double y1 = centerY + (-halfWidth * sinAngle + (-halfHeight) * cosAngle);
-
-        double x2 = centerX + (halfWidth * cosAngle - (-halfHeight) * sinAngle);
-        double y2 = centerY + (halfWidth * sinAngle + (-halfHeight) * cosAngle);
-
-        double x3 = centerX + (halfWidth * cosAngle - halfHeight * sinAngle);
-        double y3 = centerY + (halfWidth * sinAngle + halfHeight * cosAngle);
-
-        double x4 = centerX + (-halfWidth * cosAngle - halfHeight * sinAngle);
-        double y4 = centerY + (-halfWidth * sinAngle + halfHeight * cosAngle);
-
-        glColor3ub(255, 0, 0); 
-
-        glBegin(GL_QUADS);
-            glVertex2d(x1, y1);  
-            glVertex2d(x2, y2);  
-            glVertex2d(x3, y3);  
-            glVertex2d(x4, y4);  
-        glEnd();
+        for(int i = 0; i < characteristics.size(); i++) {
+            glRasterPos2i(tableStartX + 10, tableStartY + i * rowHeight + 25);
+            YsGlDrawFontBitmap8x12(characteristics[i].c_str());
+            
+            glRasterPos2i(tableStartX + colWidth + 10, tableStartY + i * rowHeight + 25);
+            YsGlDrawFontBitmap8x12(subsonic[i].c_str());
+            
+            glRasterPos2i(tableStartX + colWidth * 2 + 10, tableStartY + i * rowHeight + 25);
+            YsGlDrawFontBitmap8x12(supersonic[i].c_str());
+        }
     }
 
-    void ActiveAnimation(int mouseX, int mouseY, int lb, int mb, int rb) {
-        static int prevMouseX = mouseX;
-        if (lb && !dragging) {
-            dragging = true;
-        } else if (!lb && dragging) {
-            dragging = false;
-        }
-        if (dragging) {
-            double deltaX = mouseX - prevMouseX;
-            aerofoilAngle += deltaX * 0.01;
-        }
-        prevMouseX = mouseX;
+    void DrawImages() {
+        const int imageWidth = 200;
+        const int imageHeight = 150;
+        const int spacing = 50;
+        const int totalWidth = imageWidth * 2 + spacing;
+        const int startX = (windowWidth - totalWidth) / 2;
+        const int imageY = tableStartY + characteristics.size() * rowHeight * 1.6 + 50;
+
+        glRasterPos2i(startX, imageY);
+        glDrawPixels(subsonicImage.wid, subsonicImage.hei, GL_RGBA, GL_UNSIGNED_BYTE, subsonicImage.rgba);
+
+        glRasterPos2i(startX + imageWidth + spacing, imageY);
+        glDrawPixels(supersonicImage.wid, supersonicImage.hei, GL_RGBA, GL_UNSIGNED_BYTE, supersonicImage.rgba);
     }
 
     void Render() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        DrawAerofoil();
+        
+        // Draw heading
+        const char* heading = "Aircraft Engine Types: Subsonic vs Supersonic";
+        int headingWidth = strlen(heading) * 12;
+        int headingX = (windowWidth - headingWidth) / 2;
+        glRasterPos2i(headingX, 50);
+        YsGlDrawFontBitmap12x16(heading);
+
+        DrawTable();
+        DrawImages();
+        
+        // Draw instructions
+        glColor3ub(0, 0, 0);
+        glRasterPos2i(50, windowHeight - 50);
+        YsGlDrawFontBitmap8x12("Left Click: Play Subsonic Sound  |  Right Click: Play Supersonic Sound  |  Space: Pause/Resume");
+        
         FsSwapBuffers();
     }
 };
@@ -413,7 +467,7 @@ int main() {
             if (currentSlideIndex == 0) {
                 currentSlide = new Slide_andrewID1(); //rename
             } else if (currentSlideIndex == 1) {
-                currentSlide = new Slide_andrewID2(); //rename
+                currentSlide = new Slide_akameswa(); //rename
             }
             // If you have more/less slides, add that here. You should not be changing anything else in the main function
         }
