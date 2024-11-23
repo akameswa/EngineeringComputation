@@ -34,4 +34,25 @@ This repository contains assignments completed for the Engineering Computation (
 10. **PS7: Simple Bitmap Editor**
     - Implemented a basic bitmap editor with save and load functionality.
 
+11. **PS8: Image Histogram Visualization**
+    - Developed a program to compute and display the histogram of an image, visualizing the distribution of pixel intensities.
 
+12. **PS9: Image Binarization and Contour Extraction**
+    - Implemented image binarization and contour extraction algorithms to process images and extract their outlines.
+
+13. **PS10: Bowling Score Calculator**
+    - Created a program to calculate the total score of a bowling game from a series of user-input rolls.
+
+14. **PS11: Crank and Slider Mechanism Simulation**
+    - Simulated a crank and slider mechanism using OpenGL, illustrating the motion of mechanical components.
+
+15. **PS12: Interactive Drawing Application**
+    - Built an application that allows users to draw various primitives interactively, including points, lines, and polygons.
+
+11. **Final Project: Interactive Slide Show System**
+    - Developed a slide show system with:
+      - Audio playback support using YsSimpleSound library
+      - Interactive animations and controls
+      - Support for multiple slides with transitions
+      - Pause/Resume functionality for audio and animations
+      - Cross-platform compatibility (Windows, MacOS, Linux)
